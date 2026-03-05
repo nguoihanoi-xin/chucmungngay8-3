@@ -225,57 +225,31 @@
     </div>
 
     <script>
-        // 1. Tạo một "hộp chứa" riêng biệt để quản lý các trái tim thay vì vứt lung tung vào body
-        const heartContainer = document.createElement('div');
-        heartContainer.style.position = 'fixed';
-        heartContainer.style.top = '0';
-        heartContainer.style.left = '0';
-        heartContainer.style.width = '100%';
-        heartContainer.style.height = '100%';
-        heartContainer.style.pointerEvents = 'none'; // Đảm bảo không block click
-        heartContainer.style.zIndex = '1';
-        document.body.appendChild(heartContainer);
-
-        // 2. Thiết lập giới hạn tối đa để tránh tràn bộ nhớ
-        const MAX_HEARTS = 35; 
-
-        function createHeart() {
-            // Kiểm tra: Nếu số lượng trái tim trên màn hình đã đạt giới hạn thì dừng cấp phát thêm
-            if (heartContainer.childElementCount >= MAX_HEARTS) {
-                return;
-            }
-
-            const heart = document.createElement('div');
-            heart.classList.add('heart-drop');
-            heart.innerText = '❤️';
-
-            heart.style.left = Math.random() * 100 + 'vw';
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
             
-            const size = Math.random() * 20 + 20;
-            heart.style.fontSize = size + 'px';
+            petal.style.left = Math.random() * 100 + 'vw';
             
-            heart.style.animationDuration = Math.random() * 3 + 4 + 's';
-            heart.style.opacity = Math.random() * 0.5 + 0.5;
-
-            const colors = ['#ff4757', '#ffb7b2', '#ff6b81', '#ff1493'];
-            heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+            const size = Math.random() * 15 + 10;
+            petal.style.width = size + 'px';
+            petal.style.height = size + 'px';
             
-            heartContainer.appendChild(heart);
+            petal.style.animationDuration = Math.random() * 3 + 4 + 's';
+            petal.style.opacity = Math.random() * 0.5 + 0.3;
+            
+            document.body.appendChild(petal);
 
-            // 3. Xóa trái tim an toàn sau khi rơi xong
             setTimeout(() => {
-                if (heart.parentNode) {
-                    heart.parentNode.removeChild(heart);
-                }
+                petal.remove();
             }, 7000);
         }
 
-        // 4. Tăng thời gian giãn cách lên 500ms (0.5s) để giảm tải cho CPU
-        setInterval(createHeart, 500);
+        setInterval(createPetal, 300);
     </script>
-
 </body>
 
 </html>
+
 
 
