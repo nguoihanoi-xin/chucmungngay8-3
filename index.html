@@ -3,276 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thiệp Chúc Mừng Quốc tế Phụ nữ 8/3</title>
+    <title>Thiệp Chúc Mừng 8/3</title>
     <style>
-        /* Reset cơ bản */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Nền trang web gradient nhẹ nhàng */
+        /* Reset & Body */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-            position: relative;
-            /* Cần perspective để hiệu ứng 3D hoạt động */
-            perspective: 2000px;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; overflow: hidden; perspective: 2000px;
         }
-        /* Nút bật/tắt nhạc nổi ở góc */
-        .music-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            padding: 10px 15px;
-            border-radius: 50px;
-            cursor: pointer;
-            z-index: 100;
-            font-size: 1em;
-            color: #d63384;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: background 0.3s;
+
+        /* --- MÀN HÌNH CHỜ (START SCREEN) --- */
+        #start-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(15px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 999; cursor: pointer; transition: opacity 0.5s ease;
         }
-        .music-btn:hover {
-            background: rgba(255, 255, 255, 0.9);
+        .tap-text {
+            font-size: 1.5em; color: #d63384; font-weight: bold;
+            background: rgba(255, 255, 255, 0.9); padding: 15px 30px;
+            border-radius: 50px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            animation: pulse 1.5s infinite; text-align: center;
         }
-        /* Container chính cho thiệp */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 10px 25px rgba(214, 51, 132, 0.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- CARD CONTAINER --- */
         .card-container {
-            position: relative;
-            width: 450px;
-            min-height: 350px;
-            transition: transform 1s;
-            transform-style: preserve-3d; /* Cho phép các con hiển thị 3D */
+            position: relative; width: 450px; min-height: 300px;
+            transform-style: preserve-3d;
+            opacity: 0; /* Ẩn thiệp đi lúc đầu */
+            transform: translateY(30px) scale(0.95);
+        }
+
+        /* --- LỚP CLASS ĐƯỢC KÍCH HOẠT KHI CHẠM MÀN HÌNH --- */
+        .is-open {
             animation: startAppear 1s ease-out forwards;
         }
+        .is-open .cover-left {
+            animation: openCoverLeft 2.5s ease-in-out forwards; animation-delay: 1s;
+        }
+        .is-open .cover-right {
+            animation: openCoverRight 2.5s ease-in-out forwards; animation-delay: 1s;
+        }
+        .is-open .card-inner {
+            animation: fadeInInner 2.5s ease-in-out forwards; animation-delay: 1s;
+        }
 
-        /* Bìa thiệp (mở ra từ hai phía) */
+        /* --- BÌA THIỆP --- */
         .card-cover {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            transform-style: preserve-3d;
-            z-index: 20;
-            pointer-events: none; /* Không cản trở nội dung bên trong */
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; transform-style: preserve-3d; z-index: 20; pointer-events: none;
         }
-
-        /* Cánh bìa trái */
-        .cover-left {
-            width: 50%;
-            height: 100%;
-            background-color: #fca8d1; /* Màu hồng đậm hơn */
-            border-radius: 15px 0 0 15px;
-            transform-origin: left;
-            animation: openCoverLeft 2.5s ease-in-out forwards;
-            animation-delay: 1s;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding-right: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+        .cover-left, .cover-right {
+            width: 50%; height: 100%; background-color: #fca8d1;
+            display: flex; align-items: center; border: 1px solid rgba(255, 255, 255, 0.4);
         }
+        .cover-left { border-radius: 15px 0 0 15px; transform-origin: left; justify-content: flex-end; padding-right: 10px; }
+        .cover-right { border-radius: 0 15px 15px 0; transform-origin: right; justify-content: flex-start; padding-left: 10px; }
+        .cover-left h1, .cover-right h1 { color: #fff; font-size: 2em; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); position: absolute; width: 100%; text-align: center; }
 
-        /* Cánh bìa phải */
-        .cover-right {
-            width: 50%;
-            height: 100%;
-            background-color: #fca8d1; /* Màu hồng đậm hơn */
-            border-radius: 0 15px 15px 0;
-            transform-origin: right;
-            animation: openCoverRight 2.5s ease-in-out forwards;
-            animation-delay: 1s;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            padding-left: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-        }
-
-        /* Trang trí bìa ngoài */
-        .cover-left h1, .cover-right h1 {
-            color: #fff;
-            font-size: 2em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            position: absolute;
-            width: 100%;
-            text-align: center;
-        }
-
-        /* Nội dung thiệp bên trong (Glassmorphism) */
+        /* --- NỘI DUNG THIỆP --- */
         .card-inner {
-            position: relative;
-            top: 0;
-            left: 0;
-            width: 100%;
-            
-            background: rgba(228, 163, 194, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 40px 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            text-align: center;
-            z-index: 10;
-            opacity: 0;
-            animation: fadeInInner 2.5s ease-in-out forwards;
-            animation-delay: 1s;
+            position: relative; top: 0; left: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);
+            padding: 40px 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center; z-index: 10; opacity: 0;
             border: 1px solid rgba(255, 255, 255, 0.4);
         }
+        h2 { color: #d63384; font-size: 1.8em; margin-bottom: 15px; }
+        p { color: #444; font-size: 1.1em; line-height: 1.6; margin-bottom: 10px; }
+        .heart-static { color: #ff4757; font-size: 2em; margin-top: 15px; display: inline-block; animation: beat 1s infinite alternate; }
 
-        /* Tiêu đề trong */
-        h2 {
-            color: #d63384;
-            font-size: 2em;
-            margin-bottom: 15px;
-        }
-
-        /* Lời chúc trong */
-        p {
-            color: #444;
-            font-size: 1.1em;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-
-        /* Trái tim đập */
-        .heart {
-            color: #ff4757;
-            font-size: 4em;
-            margin-top: 15px;
-            display: inline-block;
-            animation: beat 1s infinite alternate;
-        }
-
-        /* --- Animations --- */
-
-        /* Xuất hiện thiệp ban đầu */
+        /* --- ANIMATIONS --- */
         @keyframes startAppear {
             0% { opacity: 0; transform: translateY(30px) scale(0.95); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
-
-        /* Mở cánh trái sang trái */
         @keyframes openCoverLeft {
             0% { transform: rotateY(0deg); opacity: 1; }
             40% { transform: rotateY(-90deg); opacity: 0.7; }
             100% { transform: rotateY(-180deg); opacity: 0; }
         }
-
-        /* Mở cánh phải sang phải */
         @keyframes openCoverRight {
             0% { transform: rotateY(0deg); opacity: 1; }
             40% { transform: rotateY(90deg); opacity: 0.7; }
             100% { transform: rotateY(180deg); opacity: 0; }
         }
-
-        /* Hiển thị nội dung bên trong */
         @keyframes fadeInInner {
             0% { opacity: 0; }
             40% { opacity: 0.3; }
             100% { opacity: 1; }
         }
+        @keyframes beat { to { transform: scale(1.2); } }
 
-        /* Trái tim đập */
-        @keyframes beat {
-            to { transform: scale(1.2); }
-        }
-
-        /* --- Hoa rơi --- */
-        .petal {
-            position: absolute;
-            background-color: #ffb7b2;
-            border-radius: 15px 0px 15px 0px;
-            opacity: 0.7;
-            pointer-events: none;
-            animation: fall linear infinite;
-            z-index: 1;
-        }
-
+        /* --- HEART DROP --- */
+        .heart-drop { position: absolute; pointer-events: none; animation: fall linear infinite; z-index: 1; }
         @keyframes fall {
-            0% { transform: translateY(-10vh) rotate(0deg) translateX(0); }
-            100% { transform: translateY(110vh) rotate(360deg) translateX(50px); }
+            0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg) translateX(50px); opacity: 0.1; }
         }
 
-        /* Mobile Responsive */
+        /* --- NÚT BẬT/TẮT NHẠC --- */
+        .music-btn {
+            position: fixed; bottom: 20px; right: 20px;
+            background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.5); padding: 10px 15px;
+            border-radius: 50px; cursor: pointer; z-index: 100;
+            font-size: 1em; color: #d63384; font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: none; /* Ẩn đi lúc đầu */
+        }
+
+        /* --- MOBILE RESPONSIVE --- */
         @media (max-width: 500px) {
-            .card-container {
-                width: 90%;
-                min-height: 250px;
-            }
-            .cover-left h1, .cover-right h1 {
-                font-size: 1.5em;
-            }
-            h2 {
-                font-size: 1.5em;
-            }
-            p {
-                font-size: 1em;
-            }
+            .card-container { width: 90%; min-height: 250px; }
+            .cover-left h1, .cover-right h1 { font-size: 1.5em; }
+            h2 { font-size: 1.5em; }
+            p { font-size: 1em; }
+            .tap-text { font-size: 1.2em; padding: 12px 25px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="card-container">
-        
-        <div class="card-cover">
-            <div class="cover-left">
-                <h1>Chúc</h1>
-            </div>
-            <div class="cover-right">
-                <h1>Mừng 8/3</h1>
-            </div>
-        </div>
+    <audio id="bg-music" src="nhac.mp3" loop></audio>
 
+    <div id="start-screen">
+        <div class="tap-text">👆 Chạm vào đây để mở quà nhé! 🎁</div>
+    </div>
+
+    <button id="music-btn" class="music-btn">⏸️ Tắt nhạc</button>
+
+    <div class="card-container" id="card">
+        <div class="card-cover">
+            <div class="cover-left"><h1>Chúc</h1></div>
+            <div class="cover-right"><h1>Mừng 8/3</h1></div>
+        </div>
         <div class="card-inner">
             <h2>Chúc mừng 8/3 🎀</h2>
-            <p><b>Nhân ngày Quốc tế Phụ nữ</b>, Hải Nam xin gửi đến chị em những lời chúc tốt đẹp và ngọt ngàoo nhất.</p>
-            <p>Chúc nửa thé giới luôn xinh đẹp, rạng rỡ, ngập tràn niềm vui và hạnh phúc. Cảm ơn vì đã luôn là những bông hoa tỏa hương thơm cho đời!</p>
-            <div class="heart">❤️</div>
+            <p>Nhân ngày Quốc tế Phụ nữ, Hải Nam xin gửi đến các chị em những lời chúc tốt đẹp và ngọt ngào nhất.</p>
+            <p>Chúc nửa thế giới luôn xinh đẹp, rạng rỡ, ngập tràn niềm vui và hạnh phúc. Cảm ơn vì đã luôn là những bông hoa tỏa hương thơm cho đời!</p>
+            <div class="heart-static">❤️</div>
         </div>
     </div>
-    <audio id="bg-music" src="buong.mp3" loop></audio>
-    
-    <button id="music-btn" class="music-btn">🎵 Bật nhạc</button>
+
     <script>
-        function createPetal() {
-            const petal = document.createElement('div');
-            petal.classList.add('petal');
-            
-            petal.style.left = Math.random() * 100 + 'vw';
-            
-            const size = Math.random() * 15 + 10;
-            petal.style.width = size + 'px';
-            petal.style.height = size + 'px';
-            
-            petal.style.animationDuration = Math.random() * 3 + 4 + 's';
-            petal.style.opacity = Math.random() * 0.5 + 0.3;
-            
-            document.body.appendChild(petal);
+        // 1. Logic hiệu ứng tim rơi (Đã tối ưu)
+        const heartContainer = document.createElement('div');
+        heartContainer.style.position = 'fixed';
+        heartContainer.style.top = '0'; heartContainer.style.left = '0';
+        heartContainer.style.width = '100%'; heartContainer.style.height = '100%';
+        heartContainer.style.pointerEvents = 'none'; heartContainer.style.zIndex = '1';
+        document.body.appendChild(heartContainer);
 
-            setTimeout(() => {
-                petal.remove();
-            }, 7000);
+        const MAX_HEARTS = 35; 
+        function createHeart() {
+            if (heartContainer.childElementCount >= MAX_HEARTS) return;
+            const heart = document.createElement('div');
+            heart.classList.add('heart-drop');
+            heart.innerText = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            heart.style.opacity = Math.random() * 0.5 + 0.5;
+            const colors = ['#ff4757', '#ffb7b2', '#ff6b81', '#ff1493'];
+            heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+            heartContainer.appendChild(heart);
+            setTimeout(() => { if (heart.parentNode) heart.parentNode.removeChild(heart); }, 7000);
         }
+        setInterval(createHeart, 500);
 
-        setInterval(createPetal, 300);
-        // Xử lý bật/tắt nhạc
+        // 2. Logic Màn hình chờ & Bật nhạc
+        const startScreen = document.getElementById('start-screen');
+        const card = document.getElementById('card');
         const music = document.getElementById('bg-music');
         const musicBtn = document.getElementById('music-btn');
         let isPlaying = false;
 
+        // Xử lý khi người dùng chạm vào màn hình chờ
+        startScreen.addEventListener('click', () => {
+            // Phát nhạc
+            music.play().then(() => {
+                isPlaying = true;
+                musicBtn.style.display = 'block'; // Hiện nút tắt/bật nhạc
+            }).catch(err => console.log("Lỗi phát nhạc: ", err));
+
+            // Làm mờ và ẩn màn hình chờ đi
+            startScreen.style.opacity = '0';
+            setTimeout(() => { 
+                startScreen.style.display = 'none'; 
+                
+                // Thêm class 'is-open' để kích hoạt thiệp bắt đầu mở ra
+                card.classList.add('is-open');
+            }, 400); 
+        });
+
+        // Xử lý khi người dùng ấn vào nút điều khiển nhạc góc phải
         musicBtn.addEventListener('click', () => {
             if (isPlaying) {
                 music.pause();
@@ -285,11 +217,4 @@
         });
     </script>
 </body>
-
 </html>
-
-
-
-
-
-
