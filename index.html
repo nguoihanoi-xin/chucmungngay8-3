@@ -30,7 +30,7 @@
         .card-container {
             position: relative;
             width: 500px;
-            height: 400px;
+            min-height: 400px;
             transition: transform 1s;
             transform-style: preserve-3d; /* Cho phép các con hiển thị 3D */
             animation: startAppear 1s ease-out forwards;
@@ -93,11 +93,11 @@
 
         /* Nội dung thiệp bên trong (Glassmorphism) */
         .card-inner {
-            position: absolute;
+            position: relative;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            
             background: rgba(228, 163, 194, 0.8);
             backdrop-filter: blur(10px);
             padding: 40px 30px;
@@ -189,7 +189,7 @@
         @media (max-width: 500px) {
             .card-container {
                 width: 90%;
-                height: 250px;
+                min-height: 250px;
             }
             .cover-left h1, .cover-right h1 {
                 font-size: 1.5em;
@@ -277,4 +277,5 @@
 </body>
 
 </html>
+
 
